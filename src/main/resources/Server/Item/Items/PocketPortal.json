@@ -70,7 +70,7 @@
             "Interactions": [
                 {
                     "Type": "Condition",
-                    "Crouching": true,
+                    "Crouching": false,
                     "Failed": "Block_Secondary",
                     "Next": {
                         "Type": "Serial",
@@ -117,7 +117,7 @@
             "Interactions": [
                {
                     "Type": "Condition",
-                    "Crouching": true,
+                    "Crouching": false,
                     "Failed": "Block_Secondary",
                     "Next": {
                         "Type": "Serial",
