@@ -1,0 +1,164 @@
+{
+    "TranslationProperties": {
+        "Name": "Pocket Portal",
+        "Description": "A handy companion for closing the dimension between your adventure and your home."
+    },
+    "Id": "My_New_Item",
+    "Icon": "Icons/ItemsGenerated/PocketPortal.png",
+    "Model": "Resources/PocketPortal.blockymodel",
+    "Texture": "Resources/PocketPortal_Texture.png",
+    "Quality": "Legendary",
+    "MaxStack": 1,
+    "Categories": [
+        "Items.Portal"
+    ],
+    "Recipe": {
+        "TimeSeconds": 3.5,
+        "Input": [
+            {
+                "ItemId": "Ingredient_Life_Essence",
+                "Quantity": 15
+            },
+            {
+                "ItemId": "Ingredient_Fire_Essence",
+                "Quantity": 15
+            },
+            {
+                "ItemId": "Ingredient_Void_Essence",
+                "Quantity": 15
+            }
+        ],
+        "BenchRequirement": [
+            {
+                "Id": "Workbench",
+                "Type": "Crafting",
+                "Categories": [
+                    "Workbench_Survival"
+                ]
+            }
+        ]
+    },
+    "PlayerAnimationsId": "Item",
+    "IconProperties": {
+        "Scale": 0.9,
+        "Rotation": [
+            0,
+            0,
+            0
+        ],
+        "Translation": [
+            0,
+            -13
+        ]
+    },
+    "Tags": {
+        "Type": [
+            "Portal"
+        ],
+        "Family": [
+            "Fast_Travel"
+        ]
+    },
+    "Scale": 1.2,
+    "Light": {
+        "Color": "#5e6eff",
+        "Radius": 0
+    },
+    "DropOnDeath": false,
+    "Interactions": {
+        "Secondary": {
+            "Interactions": [
+                {
+                    "Type": "Condition",
+                    "Crouching": true,
+                    "Failed": "Block_Secondary",
+                    "Next": {
+                        "Type": "Serial",
+                        "Interactions": [
+                            {
+                                "Type": "Replace",
+                                "Var": "ConsumeSFX",
+                                "DefaultValue": {
+                                    "Interactions": [
+                                        {
+                                            "Type": "Simple",
+                                            "RunTime": 1,
+                                            "Effects": {
+                                                "LocalSoundEventId": "SFX_Staff_Flame_Consume_Charge_1_local"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Type": "Charging",
+                                "FailOnDamage": true,
+                                "Effects": {
+                                    "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                                    "ClearAnimationOnFinish": true,
+                                    "ClearSoundEventOnFinish": true
+                                },
+                                "HorizontalSpeedMultiplier": 0.4,
+                                "Next": {
+                                    "2.5": {
+                                        "Type": "PocketPortal"
+                                    }
+                                },
+                                "Failed": {
+                                    "Type": "Simple"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "Primary": {
+            "Interactions": [
+               {
+                    "Type": "Condition",
+                    "Crouching": true,
+                    "Failed": "Block_Secondary",
+                    "Next": {
+                        "Type": "Serial",
+                        "Interactions": [
+                            {
+                                "Type": "Replace",
+                                "Var": "ConsumeSFX",
+                                "DefaultValue": {
+                                    "Interactions": [
+                                        {
+                                            "Type": "Simple",
+                                            "RunTime": 1,
+                                            "Effects": {
+                                                "LocalSoundEventId": "SFX_Staff_Flame_Consume_Charge_1_local"
+                                            }
+                                        }
+                                    ]
+                                }
+                            },
+                            {
+                                "Type": "Charging",
+                                "FailOnDamage": true,
+                                "Effects": {
+                                    "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                                    "ClearAnimationOnFinish": true,
+                                    "ClearSoundEventOnFinish": true
+                                },
+                                "HorizontalSpeedMultiplier": 0.4,
+                                "Next": {
+                                    "2.5": {
+                                        "Type": "PocketPortal_Switching"
+                                    }
+                                },
+                                "Failed": {
+                                    "Type": "Simple"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        }
+    }
+}
