@@ -3,10 +3,10 @@
         "Name": "Pocket Portal",
         "Description": "A handy companion for closing the dimension between your adventure and your home."
     },
-    "Id": "My_New_Item",
+    "Id": "PocketPortalAnimationDemo",
     "Icon": "Icons/ItemsGenerated/PocketPortal.png",
-    "Model": "Resources/PocketPortal.blockymodel",
-    "Texture": "Resources/PocketPortal_Texture.png",
+    "Model": "Resources/Items/PocketPortal/PocketPortal.blockymodel",
+    "Texture": "Resources/Items/PocketPortal/PocketPortal_Texture.png",
     "Quality": "Legendary",
     "MaxStack": 1,
     "Categories": [
@@ -38,7 +38,6 @@
             }
         ]
     },
-    "PlayerAnimationsId": "Item",
     "IconProperties": {
         "Scale": 0.9,
         "Rotation": [
@@ -66,6 +65,51 @@
     },
     "DropOnDeath": false,
     "Interactions": {
+        "Primary": {
+            "Interactions": [
+                {
+                    "Type": "Condition",
+                    "Crouching": false,
+                    "Failed": "Block_Secondary",
+                    "Next": {
+                        "Type": "Charging",
+                        "FailOnDamage": true,
+                        "Effects": {
+                            "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                            "ClearAnimationOnFinish": true,
+                            "ClearSoundEventOnFinish": true,
+                            "FirstPersonParticles": [
+                                {
+                                    "SystemId": "Teleport",
+                                    "TargetEntityPart": "PrimaryItem",
+                                    "Color": "#11189b",
+                                    "Scale": 0.2,
+                                    "PositionOffset": {
+                                        "Y": 0.1
+                                    }
+                                }
+                            ],
+                            "Particles": [
+                                {
+                                    "SystemId": "Teleport",
+                                    "TargetEntityPart": "Entity",
+                                    "Color": "#11189b"
+                                }
+                            ]
+                        },
+                        "HorizontalSpeedMultiplier": 0.4,
+                        "Next": {
+                            "2.5": {
+                                "Type": "PocketPortal_Switching"
+                            }
+                        },
+                        "Failed": {
+                            "Type": "Simple"
+                        }
+                    }
+                }
+            ]
+        },
         "Secondary": {
             "Interactions": [
                 {
@@ -73,92 +117,48 @@
                     "Crouching": false,
                     "Failed": "Block_Secondary",
                     "Next": {
-                        "Type": "Serial",
-                        "Interactions": [
-                            {
-                                "Type": "Replace",
-                                "Var": "ConsumeSFX",
-                                "DefaultValue": {
-                                    "Interactions": [
-                                        {
-                                            "Type": "Simple",
-                                            "RunTime": 1,
-                                            "Effects": {
-                                                "LocalSoundEventId": "SFX_Staff_Flame_Consume_Charge_1_local"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "Type": "Charging",
-                                "FailOnDamage": true,
-                                "Effects": {
-                                    "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
-                                    "ClearAnimationOnFinish": true,
-                                    "ClearSoundEventOnFinish": true
-                                },
-                                "HorizontalSpeedMultiplier": 0.4,
-                                "Next": {
-                                    "2.5": {
-                                        "Type": "PocketPortal"
+                        "Type": "Charging",
+                        "FailOnDamage": true,
+                        "Effects": {
+                            "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                            "ClearAnimationOnFinish": true,
+                            "ClearSoundEventOnFinish": true,
+                            "FirstPersonParticles": [
+                                {
+                                    "SystemId": "Teleport",
+                                    "TargetEntityPart": "PrimaryItem",
+                                    "Color": "#11189b",
+                                    "Scale": 0.2,
+                                    "PositionOffset": {
+                                        "Y": 0.1,
+                                        "X": 0,
+                                        "Z": 0
                                     }
-                                },
-                                "Failed": {
-                                    "Type": "Simple"
                                 }
+                            ],
+                            "Particles": [
+                                {
+                                    "SystemId": "Teleport",
+                                    "TargetEntityPart": "Entity",
+                                    "Color": "#11189b"
+                                }
+                            ]
+                        },
+                        "HorizontalSpeedMultiplier": 0.4,
+                        "Next": {
+                            "2.5": {
+                                "Type": "PocketPortal"
                             }
-                        ]
-                    }
-                }
-            ]
-        },
-        "Primary": {
-            "Interactions": [
-               {
-                    "Type": "Condition",
-                    "Crouching": false,
-                    "Failed": "Block_Secondary",
-                    "Next": {
-                        "Type": "Serial",
-                        "Interactions": [
-                            {
-                                "Type": "Replace",
-                                "Var": "ConsumeSFX",
-                                "DefaultValue": {
-                                    "Interactions": [
-                                        {
-                                            "Type": "Simple",
-                                            "RunTime": 1,
-                                            "Effects": {
-                                                "LocalSoundEventId": "SFX_Staff_Flame_Consume_Charge_1_local"
-                                            }
-                                        }
-                                    ]
-                                }
-                            },
-                            {
-                                "Type": "Charging",
-                                "FailOnDamage": true,
-                                "Effects": {
-                                    "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
-                                    "ClearAnimationOnFinish": true,
-                                    "ClearSoundEventOnFinish": true
-                                },
-                                "HorizontalSpeedMultiplier": 0.4,
-                                "Next": {
-                                    "2.5": {
-                                        "Type": "PocketPortal_Switching"
-                                    }
-                                },
-                                "Failed": {
-                                    "Type": "Simple"
-                                }
-                            }
-                        ]
+                        },
+                        "Failed": {
+                            "Type": "Simple"
+                        }
                     }
                 }
             ]
         }
-    }
+    },
+    "Animation": "Resources/Items/PocketPortal/Animations/PocketPortal_Interaction.blockyanim",
+    "UsePlayerAnimations": false,
+    "PlayerAnimationsId": "Item"
 }

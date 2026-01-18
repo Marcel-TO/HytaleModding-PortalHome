@@ -7,6 +7,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.protocol.InteractionState;
 import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.Message;
@@ -63,15 +64,18 @@ public class PocketPortalInteraction extends SimpleInstantInteraction {
         player.sendMessage(Message.raw("Saved current position: " + newPosition.toString()));
 
         // Prepare Vector
-        var spawnPoint = Player.getRespawnPosition(ref, world.getName(), store);
+        Transform spawnPoint = Player.getRespawnPosition(ref, world.getName(), store);
         player.sendMessage(Message.raw(spawnPoint.toString()));
         Vector3d spawnPointPosition = spawnPoint.getPosition();
+        Vector3f spawnPointRotation = spawnPoint.getRotation();
         // Teleport Player
         world.execute(() -> {
             if (player.getReference() == null)
                 return;
             Teleport teleport = new Teleport(
-                    new Transform(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()));
+                new Vector3d(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()),
+                new Vector3f(spawnPointRotation.getX(), spawnPointRotation.getY(), spawnPointRotation.getZ())
+            );
             store.addComponent(player.getReference(), Teleport.getComponentType(), teleport);
         });
     }

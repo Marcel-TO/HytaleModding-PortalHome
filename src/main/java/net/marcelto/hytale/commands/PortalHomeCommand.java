@@ -2,8 +2,8 @@ package net.marcelto.hytale.commands;
 
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
+import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
@@ -39,7 +39,7 @@ public class PortalHomeCommand extends AbstractPlayerCommand {
         Player player = store.getComponent(ref, Player.getComponentType()); // also a component
         assert player != null;
 
-         // Get player's current position
+        // Get player's current position
         Vector3d currentPlayerPosition = player.getPlayerConfigData().lastSavedPosition;
         Vector3d newPosition = new Vector3d(currentPlayerPosition.getX(), currentPlayerPosition.getY(),
                 currentPlayerPosition.getZ());
@@ -51,12 +51,14 @@ public class PortalHomeCommand extends AbstractPlayerCommand {
         var spawnPoint = Player.getRespawnPosition(ref, world.getName(), store);
         player.sendMessage(Message.raw(spawnPoint.toString()));
         Vector3d spawnPointPosition = spawnPoint.getPosition();
+        Vector3f spawnPointRotation = spawnPoint.getRotation();
         // Teleport Player
         world.execute(() -> {
             if (player.getReference() == null)
                 return;
             Teleport teleport = new Teleport(
-                    new Transform(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()));
+                    new Vector3d(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()),
+                    new Vector3f(spawnPointRotation.getX(), spawnPointRotation.getY(), spawnPointRotation.getZ()));
             store.addComponent(player.getReference(), Teleport.getComponentType(), teleport);
         });
     }
