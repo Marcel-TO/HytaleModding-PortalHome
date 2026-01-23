@@ -8,6 +8,7 @@ import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.command.system.CommandContext;
 import com.hypixel.hytale.server.core.command.system.basecommands.AbstractPlayerCommand;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.data.PlayerRespawnPointData;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.World;
@@ -48,10 +49,19 @@ public class PortalHomeCommand extends AbstractPlayerCommand {
         player.sendMessage(Message.raw("Saved current position: " + newPosition.toString()));
 
         // Prepare Vector
-        var spawnPoint = Player.getRespawnPosition(ref, world.getName(), store);
-        player.sendMessage(Message.raw(spawnPoint.toString()));
-        Vector3d spawnPointPosition = spawnPoint.getPosition();
-        Vector3f spawnPointRotation = spawnPoint.getRotation();
+        PlayerRespawnPointData[] respawnPoints = player.getPlayerConfigData().getPerWorldData(world.getName())
+                .getRespawnPoints();
+        if (respawnPoints.length == 0) {
+            player.sendMessage(Message.raw("No respawn points found."));
+            LOGGER.atInfo().log("No respawn points found for player: " + player.getDisplayName());
+            return;
+        }
+
+        player.sendMessage(Message.raw(respawnPoints[0].toString()));
+        Vector3d spawnPointPosition = respawnPoints[0].getRespawnPosition();
+        Vector3f spawnPointRotation = new Vector3f(player.getPlayerConfigData().lastSavedRotation.getX(),
+                player.getPlayerConfigData().lastSavedRotation.getY(),
+                player.getPlayerConfigData().lastSavedRotation.getZ());
         // Teleport Player
         world.execute(() -> {
             if (player.getReference() == null)

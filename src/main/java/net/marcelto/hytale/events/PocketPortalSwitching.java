@@ -1,6 +1,5 @@
 package net.marcelto.hytale.events;
 
-import com.hypixel.hytale.assetstore.map.IndexedLookupTableAssetMap;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
@@ -13,11 +12,7 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
-import com.hypixel.hytale.server.core.entity.entities.player.movement.MovementConfig;
-import com.hypixel.hytale.server.core.entity.entities.player.pages.PageManager;
-import com.hypixel.hytale.server.core.inventory.Inventory;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
-import com.hypixel.hytale.server.core.inventory.container.ItemContainer;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
@@ -74,13 +69,6 @@ public class PocketPortalSwitching extends SimpleInstantInteraction {
                 player.getPlayerConfigData().lastSavedRotation.getY(),
                 player.getPlayerConfigData().lastSavedRotation.getZ());
         player.sendMessage(Message.raw("Teleporting to last portal location: " + lastPortalPosition.toString()));
-
-        PageManager pageManager = player.getPageManager();
-        Inventory inventory = player.getInventory();
-        ItemContainer itemContainer = inventory.getStorage();
-        itemContainer.addItemStack(itemStack);
-        itemContainer.addItemStackToSlot((short) 0, itemStack);
-        itemContainer.removeItemStack(itemStack);
 
         // Teleport Player
         world.execute(() -> {

@@ -5,7 +5,6 @@ import com.hypixel.hytale.component.CommandBuffer;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.math.vector.Transform;
 import com.hypixel.hytale.math.vector.Vector3d;
 import com.hypixel.hytale.math.vector.Vector3f;
 import com.hypixel.hytale.protocol.InteractionState;
@@ -13,6 +12,7 @@ import com.hypixel.hytale.protocol.InteractionType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.data.PlayerRespawnPointData;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
@@ -20,6 +20,7 @@ import com.hypixel.hytale.server.core.modules.interaction.interaction.config.Sim
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import net.marcelto.hytale.PortalHome;
+
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 
 public class PocketPortalInteraction extends SimpleInstantInteraction {
@@ -64,18 +65,28 @@ public class PocketPortalInteraction extends SimpleInstantInteraction {
         player.sendMessage(Message.raw("Saved current position: " + newPosition.toString()));
 
         // Prepare Vector
-        Transform spawnPoint = Player.getRespawnPosition(ref, world.getName(), store);
-        player.sendMessage(Message.raw(spawnPoint.toString()));
-        Vector3d spawnPointPosition = spawnPoint.getPosition();
-        Vector3f spawnPointRotation = spawnPoint.getRotation();
+        PlayerRespawnPointData[] respawnPoints = player.getPlayerConfigData().getPerWorldData(world.getName())
+                .getRespawnPoints();
+
+        if (respawnPoints.length == 0) {
+            interactionContext.getState().state = InteractionState.Failed;
+            player.sendMessage(Message.raw("No respawn points found."));
+            LOGGER.atInfo().log("No respawn points found for player: " + player.getDisplayName());
+            return;
+        }
+        player.sendMessage(Message.raw(respawnPoints[0].toString()));
+        Vector3d spawnPointPosition = respawnPoints[0].getRespawnPosition();
+        Vector3f newRotation = new Vector3f(player.getPlayerConfigData().lastSavedRotation.getX(),
+                player.getPlayerConfigData().lastSavedRotation.getY(),
+                player.getPlayerConfigData().lastSavedRotation.getZ());
+
         // Teleport Player
         world.execute(() -> {
             if (player.getReference() == null)
                 return;
             Teleport teleport = new Teleport(
-                new Vector3d(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()),
-                new Vector3f(spawnPointRotation.getX(), spawnPointRotation.getY(), spawnPointRotation.getZ())
-            );
+                    new Vector3d(spawnPointPosition.getX(), spawnPointPosition.getY(), spawnPointPosition.getZ()),
+                    newRotation);
             store.addComponent(player.getReference(), Teleport.getComponentType(), teleport);
         });
     }
