@@ -3,7 +3,7 @@
         "Name": "Pocket Portal",
         "Description": "A handy companion for closing the dimension between your adventure and your home."
     },
-    "Id": "PocketPortalAnimationDemo",
+    "Id": "PocketPortal",
     "Icon": "Icons/ItemsGenerated/PocketPortal.png",
     "Model": "Resources/Items/PocketPortal/PocketPortal.blockymodel",
     "Texture": "Resources/Items/PocketPortal/PocketPortal_Texture.png",
