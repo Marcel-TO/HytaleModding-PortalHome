@@ -1,0 +1,28 @@
+plugins {
+    id("java")
+    // See documentation on https://scaffoldit.dev
+    id("dev.scaffoldit") version "0.2.9"
+}
+
+group = "Marcel-TO"
+version = "1.0.3"
+var manifestVersion = version as String
+
+//
+// Automatically configures the builds, but you can switch scripts if you wish!
+//
+hytale {
+    usePatchline("release")
+    useVersion("latest")
+
+    manifest {
+        Group = group as String
+        Name = "PortalHome"
+        Main = "net.marcelto.hytale.PortalHome"
+        Version = manifestVersion
+    }
+    devserver {
+        Enabled = (System.getenv("DEV_SERVER_ENABLED") ?: "false").toBoolean()
+        AllowOp = (System.getenv("DEV_SERVER_ALLOW_OP") ?: "false").toBoolean()
+    }
+}

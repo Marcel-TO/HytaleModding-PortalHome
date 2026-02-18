@@ -1,7 +1,7 @@
 {
-    "Group": "net.marcelto.hytale",
+    "Group": "Marcel-TO",
     "Name": "PortalHome",
-    "Version": "1.0.1",
+    "Version": "1.0.3",
     "Description": "PortalHomeCommand lets you warp home to your spawnpoint.",
     "Authors": [
         {
@@ -10,10 +10,10 @@
         }
     ],
     "Website": "https://github.com/Marcel-TO/HytaleModding-PortalHome",
-    "ServerVersion": "*",
-    "Dependencies": {},
-    "OptionalDependencies": {},
     "DisabledByDefault": false,
     "IncludesAssetPack": true,
+    "Dependencies": {},
+    "OptionalDependencies": {},
+    "ServerVersion": "*",
     "Main": "net.marcelto.hytale.PortalHome"
 }
