@@ -1,109 +1,42 @@
-# Wartale - Warhammer 40,000 for Hytale
+## **PortalHome - Your Dimensional Tether**
 
-**Wartale** is a Hytale mod that brings the grimdark universe of Warhammer 40,000 to life in Hytale. Experience the epic warfare of the 41st millennium with iconic weapons, items, and mechanics from the Warhammer 40k universe.
+**Never lose your way back home again.**
 
-## 📋 Requirements
+PortalHome introduces the **Pocket Portal**, a legendary mystical artifact that serves as your personal dimensional anchor in the world of Hytale. This isn't just another teleportation item—it's a sophisticated two-way portal system that remembers where you've been.
 
-- **Hytale** (Server Version: Any - specified as `*` in manifest)
-- **Java** 17 or higher
-- **Gradle** 8.x or higher
+### **How It Works**
 
-## 🔧 Development Setup
+The Pocket Portal creates an invisible tether between your current location and your home spawn point. When you activate it:
 
-### Prerequisites
-1. Install Java Development Kit (JDK) 17+
-2. Set up your local Hytale installation path in `gradle.properties`:
-   ```properties
-   hytale.home_path=<YOUR_HYTALE_PATH> # Example: C:/Games/Hytale
-   ```
-3. Add the other environment variables to `gradle.properties` to enable/disable compilation of sources and docs:
-   ```properties
-   env.java.compileSources=false
-   env.java.compileDocs=false
-   ```
-4. Create a `.env` file in the project root and follow the template `.env.example` to set the path to your Hytale mods folder:
-   ```env
-   HYTALE_MODS_PATH=<YOUR_HYTALE_MODS_PATH> # Example: C:/Games/Hytale/mods
-   ```
+1.  **Hold Secondary Interaction (Journey Home)**: The portal saves your exact coordinates and instantly warps you back to your spawn point—perfect for those "oh no" moments when you're deep in a dungeon, carrying precious loot, or simply tired from a long adventure.
+    
+2.  **Hold Primary Interaction (Return to Adventure)**: Activate the portal again, and it reopens the rift, teleporting you back to the exact spot where you first used it. No need to trek back through dangerous territory or waste time retracing your steps.
+    
 
-### Building the Mod
+### **Features**
 
-Clone the repository and build using Gradle:
+*   **Bidirectional Teleportation**: Smart switching system that alternates between home and your saved adventure location
+*   **Position Memory**: Stores your last portal location per player, ensuring accuracy
+*   **Dual Activation Methods**:
+    *   Use the item interaction for quick warping
+    *   Access via `/portal-home` command for convenience
+*   **Visual Polish**: Includes custom 3D models and animations for an immersive experience
 
-```bash
-# Clone the repository
-git clone <repository-url>
-cd WarTale-40-000
+### 🔮 **Crafting Recipe**
 
-# Build the project
-./gradlew build
+Befitting its legendary status, the Pocket Portal requires rare essences:
 
-# Generate Javadoc
-./gradlew javadoc
-```
+*   15x Life Essence
+*   15x Fire Essence
+*   15x Void Essence
 
-The compiled mod will be available in `build/libs/Wartale-1.0.0.jar`
+Crafted at a Survival Workbench in just 3.5 seconds—once you have the ingredients, of course.
 
-### Project Structure
+### 💡 **Perfect For**
 
-```
-WarTale-40-000/
-├── src/main/java/com/warhammer/wartale/
-│   ├── Wartale.java                      # Main plugin class
-│   ├── components/
-│   │   └── Weapon_Data.java              # Weapon ammunition data component
-│   ├── interactions/weapons/
-│   │   ├── Weapon_Interaction_Shoot.java # Shooting interaction handler
-│   │   └── Weapon_Interaction_Reload.java# Reload interaction handler
-│   ├── metadata/
-│   │   └── WarhammerMetadataCollection.java # Weapon metadata registry
-│   └── types/
-│       └── WarhammerWeaponMetadata.java  # Weapon metadata type
-├── src/main/resources/
-│   ├── manifest.json                      # Mod manifest
-│   ├── Server/Item/Items/Warhammer/      # Item definitions
-│   ├── Common/Sounds/Warhammer/          # Sound effects
-│   └── WeaponMetadata/                   # Weapon configuration
-└── build.gradle.kts                       # Build configuration
-```
+*   **Explorers** who venture far but need quick access to home storage
+*   **Miners** who want to deposit resources without losing their mining spot
+*   **Adventurers** tackling dangerous dungeons with a reliable escape route
+*   **Builders** working on distant projects who need to return to spawn for supplies
 
-## 🚀 Installation
-
-1. Build or download the mod JAR file
-2. Place `Wartale-1.0.0.jar` in your Hytale mods folder
-3. Start your Hytale server
-4. The mod will automatically load with all assets
-
-## 💻 Technical Details
-
-### Built With
-- **Scaffoldit** v0.2.2 - Hytale mod development framework
-- **Gradle** with Kotlin DSL
-- **Hytale Server API**
-
-### Component System
-The mod uses Hytale's Entity Component System (ECS) to track weapon data:
-- `Weapon_Data` component stores current ammunition per weapon
-- Data persists across player sessions
-- Custom codec for serialization/deserialization
-
-### Interaction System
-Custom interactions registered with Hytale's interaction framework:
-- `Warhammer_Weapon_Interaction_Shoot` - Handles weapon firing
-- `Warhammer_Weapon_Interaction_Reload` - Manages ammunition reloading
-
-### Weapon Metadata
-Weapons are configured via metadata collections:
-```java
-map.put("Warhammer_Bolter_Pistol_custom",
-    new WarhammerWeaponMetadata("Warhammer_Bolter_Pistol_custom", 13, 5));
-```
-- **maxAmmo**: Magazine capacity
-- **reload**: Reload time multiplier
-
-
----
-
-**For the Emperor!** ⚔️
-
-*In the grim darkness of the far future, there is only war... in Hytale.*
+**Warning**: The Pocket Portal is unique—you can only carry one at a time. Choose wisely when to use this powerful tool!
