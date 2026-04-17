@@ -1,19 +1,25 @@
 {
     "Group": "Marcel-TO",
-    "Name": "PortalHome",
-    "Version": "1.0.3",
-    "Description": "PortalHomeCommand lets you warp home to your spawnpoint.",
+    "Name": "portalhome",
+    "Version": "1.0.4",
+    "Description": "PortalHome introduces the Pocket Portal, a legendary mystical artifact that serves as your personal dimensional anchor in the world of Hytale.",
     "Authors": [
         {
-            "Name": "Marcel-TO",
-            "Url": "https://marcel-to.net"
+            "Name": "Marcel-TO/McHawk"
         }
     ],
     "Website": "https://github.com/Marcel-TO/HytaleModding-PortalHome",
     "DisabledByDefault": false,
     "IncludesAssetPack": true,
-    "Dependencies": {},
-    "OptionalDependencies": {},
-    "ServerVersion": "*",
-    "Main": "net.marcelto.hytale.PortalHome"
+    "Dependencies": {
+        
+    },
+    "OptionalDependencies": {
+        
+    },
+    "ServerVersion": "2026.04.17-c2d518cc9",
+    "Main": "net.marcelto.hytale.PortalHome",
+    "UpdateChecker": {
+        "CurseForge": ""
+    }
 }

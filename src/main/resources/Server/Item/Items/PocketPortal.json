@@ -100,7 +100,7 @@
                         "HorizontalSpeedMultiplier": 0.4,
                         "Next": {
                             "2.5": {
-                                "Type": "PocketPortal_Switching"
+                                "Type": "PocketPortal_Home"
                             }
                         },
                         "Failed": {
@@ -147,7 +147,7 @@
                         "HorizontalSpeedMultiplier": 0.4,
                         "Next": {
                             "2.5": {
-                                "Type": "PocketPortal"
+                                "Type": "PocketPortal_LastPos"
                             }
                         },
                         "Failed": {

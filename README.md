@@ -2,7 +2,7 @@
 
 **Never lose your way back home again.**
 
-PortalHome introduces the **Pocket Portal**, a legendary mystical artifact that serves as your personal dimensional anchor in the world of Hytale. This isn't just another teleportation item—it's a sophisticated two-way portal system that remembers where you've been.
+PortalHome introduces the **Pocket Portal**, a legendary mystical artifact that serves as your personal dimensional anchor in the world of Hytale. This isn't just another teleportation item—it's a sophisticated two-way portal system that remembers where you've been. With the Pocket Portal, you can seamlessly travel between your current location and your home spawn point, making it an essential tool for any adventurer, miner, or builder who wants to explore without worrying about getting lost.
 
 ### **How It Works**
 
