@@ -93,8 +93,12 @@ public class TeleportHomeInteraction extends SimpleInstantInteraction {
     Map<String, Vector3d> LastPortalPositions = new HashMap<>(portaldata.getLastPortalPositions());
     LastPortalPositions.put(playerUid.getUuid().toString(), newPosition);
     portaldata.setLastPortalPositions(LastPortalPositions);
+    String subMessage =
+        String.format(
+            "X: %d, Y: %d, Z: %d",
+            (int) newPosition.x(), (int) newPosition.y(), (int) newPosition.z());
 
-    sendNotificationToPlayer(playerRef, "Saved last position", newPosition.toString());
+    sendNotificationToPlayer(playerRef, "Saved last position", subMessage);
 
     // Prepare Vector
     PlayerRespawnPointData[] respawnPoints =
@@ -110,7 +114,6 @@ public class TeleportHomeInteraction extends SimpleInstantInteraction {
       LOGGER.atInfo().log("No respawn points found for player: " + playerRef.getUsername());
       return;
     }
-    playerRef.sendMessage(Message.raw(respawnPoints[0].toString()));
     Vector3d spawnPointPosition = respawnPoints[0].getRespawnPosition();
     Rotation3f newRotation =
         new Rotation3f(

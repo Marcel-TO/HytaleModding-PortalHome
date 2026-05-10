@@ -94,8 +94,11 @@ public class TeleportLastPositionInteraction extends SimpleInstantInteraction {
             player.getPlayerConfigData().lastSavedRotation.x(),
             player.getPlayerConfigData().lastSavedRotation.y(),
             player.getPlayerConfigData().lastSavedRotation.z());
-    sendNotificationToPlayer(
-        playerRef, "Teleporting to last portal location", lastPortalPosition.toString());
+    String subMessage =
+        String.format(
+            "X: %d, Y: %d, Z: %d",
+            (int) newPosition.x(), (int) newPosition.y(), (int) newPosition.z());
+    sendNotificationToPlayer(playerRef, "Teleporting to last portal location", subMessage);
 
     // Teleport Player
     world.execute(
