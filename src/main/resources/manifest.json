@@ -1,6 +1,6 @@
 {
     "Group": "Marcel-TO",
-    "Name": "portalhome",
+    "Name": "PortalHome",
     "Version": "1.0.7",
     "Description": "PortalHome introduces the Pocket Portal, a legendary mystical artifact that serves as your personal dimensional anchor in the world of Hytale.",
     "Authors": [
@@ -17,7 +17,7 @@
     "OptionalDependencies": {
         
     },
-    "ServerVersion": "0.5.0-pre.8",
+    "ServerVersion": ">=0.5.6",
     "Main": "net.marcelto.hytale.PortalHome",
     "UpdateChecker": {
         "CurseForge": "1442209"

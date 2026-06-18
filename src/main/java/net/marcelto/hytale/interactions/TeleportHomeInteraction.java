@@ -14,6 +14,7 @@ import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.data.PlayerRespawnPointData;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
@@ -70,7 +71,9 @@ public class TeleportHomeInteraction extends SimpleInstantInteraction {
     Player player = commandBuffer.getComponent(ref, Player.getComponentType());
     PlayerRef playerRef = commandBuffer.getComponent(ref, PlayerRef.getComponentType());
     UUIDComponent playerUid = commandBuffer.getComponent(ref, UUIDComponent.getComponentType());
-    if (player == null || playerRef == null || playerUid == null) {
+    TransformComponent transformComponent =
+        commandBuffer.getComponent(ref, TransformComponent.getComponentType());
+    if (player == null || playerRef == null || playerUid == null || transformComponent == null) {
       interactionContext.getState().state = InteractionState.Failed;
       LOGGER.atInfo().log("Player is null");
       return;
@@ -84,7 +87,8 @@ public class TeleportHomeInteraction extends SimpleInstantInteraction {
     }
 
     // Get player's current position
-    Vector3d currentPlayerPosition = player.getPlayerConfigData().lastSavedPosition;
+    Vector3d currentPlayerPosition = transformComponent.getPosition();
+    Rotation3f currentPlayerRotation = transformComponent.getRotation();
     Vector3d newPosition =
         new Vector3d(
             currentPlayerPosition.x(), currentPlayerPosition.y(), currentPlayerPosition.z());
@@ -117,9 +121,7 @@ public class TeleportHomeInteraction extends SimpleInstantInteraction {
     Vector3d spawnPointPosition = respawnPoints[0].getRespawnPosition();
     Rotation3f newRotation =
         new Rotation3f(
-            player.getPlayerConfigData().lastSavedRotation.x(),
-            player.getPlayerConfigData().lastSavedRotation.y(),
-            player.getPlayerConfigData().lastSavedRotation.z());
+            currentPlayerRotation.x(), currentPlayerRotation.y(), currentPlayerRotation.z());
 
     // Teleport Player
     world.execute(

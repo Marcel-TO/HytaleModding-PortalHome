@@ -7,8 +7,10 @@ import javax.annotation.Nonnull;
 
 public class PocketPortalHUD extends CustomUIHud {
   public PocketPortalHUD(@Nonnull PlayerRef playerRef) {
-    super(playerRef);
+    super(playerRef, HUD_ID);
   }
+
+  public static final String HUD_ID = "portalhome_hud";
 
   @Override
   protected void build(@Nonnull UICommandBuilder ui) {

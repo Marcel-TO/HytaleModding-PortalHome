@@ -6,6 +6,7 @@ import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.component.query.Query;
 import com.hypixel.hytale.component.system.tick.EntityTickingSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.inventory.InventoryComponent;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
@@ -29,11 +30,13 @@ public class HudTickingSystem extends EntityTickingSystem<EntityStore> {
 
     UUID playerId = playerRef.getUuid();
 
-    PocketPortalHUD hud = (PocketPortalHUD) player.getHudManager().getCustomHud();
+    PocketPortalHUD hud =
+        (PocketPortalHUD) player.getHudManager().getCustomHud(PocketPortalHUD.HUD_ID);
     if (hud == null) return;
 
-    // Determine item
-    ItemStack heldItem = player.getInventory().getItemInHand();
+    // Determine item in hand
+    ItemStack heldItem =
+        InventoryComponent.getItemInHand(commandBuffer, chunk.getReferenceTo(index));
     if (heldItem == null) return;
 
     boolean shouldVisible = heldItem.getItemId().equals("PocketPortal");

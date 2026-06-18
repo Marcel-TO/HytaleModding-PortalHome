@@ -13,6 +13,7 @@ import com.hypixel.hytale.server.core.entity.InteractionContext;
 import com.hypixel.hytale.server.core.entity.UUIDComponent;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.inventory.ItemStack;
+import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.CooldownHandler;
 import com.hypixel.hytale.server.core.modules.interaction.interaction.config.SimpleInstantInteraction;
@@ -64,7 +65,12 @@ public class TeleportLastPositionInteraction extends SimpleInstantInteraction {
     Player player = commandBuffer.getComponent(ref, Player.getComponentType());
     PlayerRef playerRef = commandBuffer.getComponent(ref, PlayerRef.getComponentType());
     UUIDComponent uuidComponent = commandBuffer.getComponent(ref, UUIDComponent.getComponentType());
-    if (player == null || playerRef == null || uuidComponent == null) {
+    TransformComponent transformComponent =
+        commandBuffer.getComponent(ref, TransformComponent.getComponentType());
+    if (player == null
+        || playerRef == null
+        || uuidComponent == null
+        || transformComponent == null) {
       interactionContext.getState().state = InteractionState.Failed;
       LOGGER.atInfo().log("Player is null");
       return;
@@ -78,6 +84,7 @@ public class TeleportLastPositionInteraction extends SimpleInstantInteraction {
     }
 
     // Get last portal position for this player
+    assert portaldata != null;
     Map<String, Vector3d> LastPortalPositions = new HashMap<>(portaldata.getLastPortalPositions());
     Vector3d lastPortalPosition = LastPortalPositions.get(uuidComponent.getUuid().toString());
     if (lastPortalPosition == null) {
@@ -91,9 +98,9 @@ public class TeleportLastPositionInteraction extends SimpleInstantInteraction {
         new Vector3d(lastPortalPosition.x(), lastPortalPosition.y(), lastPortalPosition.z());
     Rotation3f newRotation =
         new Rotation3f(
-            player.getPlayerConfigData().lastSavedRotation.x(),
-            player.getPlayerConfigData().lastSavedRotation.y(),
-            player.getPlayerConfigData().lastSavedRotation.z());
+            transformComponent.getRotation().x(),
+            transformComponent.getRotation().y(),
+            transformComponent.getRotation().z());
     String subMessage =
         String.format(
             "X: %d, Y: %d, Z: %d",

@@ -1,9 +1,14 @@
 set dotenv-load := true
 
-# Builds the mod and copies it to the Hytale mods folder
+# Builds the mod
 [group('Build')]
 build:
-    ./gradlew build && cp $(ls build/libs/*.jar | grep -v '\-sources\|\-javadoc') ${HYTALE_MODS_PATH}
+    ./gradlew build
+
+# Builds the mod and copies it to the Hytale mods folder
+[group('Build')]
+build-and-copy: build
+    cp $(ls build/libs/*.jar | grep -v '\-sources\|\-javadoc') ${HYTALE_MODS_PATH}
 
 # Cleans the build and development server files
 [group('Build')]
