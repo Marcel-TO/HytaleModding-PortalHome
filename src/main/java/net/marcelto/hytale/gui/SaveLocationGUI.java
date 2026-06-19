@@ -6,21 +6,19 @@ import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
 import com.hypixel.hytale.logger.HytaleLogger;
-import com.hypixel.hytale.protocol.ItemWithAllMetadata;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.NotificationUtil;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.components.PocketPortalDataComponent;
 import net.marcelto.hytale.components.TeleportLocationComponent;
+import net.marcelto.hytale.utils.NotifyPlayer;
 import org.joml.Vector3d;
 
 public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.SaveData> {
@@ -98,7 +96,7 @@ public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.Sav
 
         portalDataComponent.addPortalPosition(
             new TeleportLocationComponent(this.nameInput, this.lastStoredPosition));
-        this.sendNotificationToPlayer(
+        NotifyPlayer.SendNotificationToPlayer(
             playerRef,
             "Location Saved!",
             "Your location '" + this.nameInput + "' has been saved successfully.");
@@ -123,17 +121,5 @@ public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.Sav
             .build();
     private String button;
     private String nameValue;
-  }
-
-  private void sendNotificationToPlayer(
-      @Nonnull PlayerRef playerRef, String message, String submessage) {
-    String color = "#c300ff";
-    String secondaryColor = "#c29cf3";
-    var packetHandler = playerRef.getPacketHandler();
-    var primaryMessage = Message.raw(message).color(color);
-    var secondaryMessage = Message.raw(submessage).color(secondaryColor);
-    var icon = new ItemStack("PocketPortal", 1).toPacket();
-    NotificationUtil.sendNotification(
-        packetHandler, primaryMessage, secondaryMessage, (ItemWithAllMetadata) icon);
   }
 }

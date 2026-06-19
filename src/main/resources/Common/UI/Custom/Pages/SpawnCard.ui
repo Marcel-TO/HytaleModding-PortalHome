@@ -1,0 +1,38 @@
+$C = "../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Bottom: 8);
+  Background: $C.@InputBoxBackground;
+  Padding: (Left: 12, Right: 10, Top: 8, Bottom: 8);
+
+  Label #SpawnName {
+    Style: (
+      FontSize: 14,
+      TextColor: #c29cf3,
+      RenderBold: true
+    );
+    Text: "Home";
+  }
+
+  Label #SpawnCoords {
+    Anchor: (Top: 2, Bottom: 6);
+    Style: (
+      FontSize: 12,
+      TextColor: #c300ff
+    );
+    Text: "X: 0  Y: 0  Z: 0";
+  }
+
+  Group {
+    LayoutMode: CenterMiddle;
+    Anchor: (Height: 36);
+    Padding: (Full: 6);
+
+    $C.@TextButton #TeleportToSpawnButton {
+      Anchor: (Height: 36);
+      FlexWeight: 1;
+      Text: "Teleport Home";
+    }
+  }
+}

@@ -60,6 +60,10 @@ $C.@PageOverlay {
           LayoutMode: TopScrolling;
           ScrollbarStyle: $C.@DefaultScrollbarStyle;
 
+          Group #SpawnCards {
+            LayoutMode: Top;
+          }
+
           Group #IndexCards {
             LayoutMode: Top;
           }
@@ -76,10 +80,11 @@ $C.@PageOverlay {
               HorizontalAlignment: Center
             );
             Text: "No saved locations yet.";
+            Padding: (Bottom: 8);
           }
 
           Label {
-            Anchor: (Top: 8);
+            Anchor: (Top: 30);
             Style: (
               FontSize: 13,
               TextColor: #c29cf3(0.35),

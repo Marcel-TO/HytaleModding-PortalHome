@@ -9,8 +9,8 @@ Group #Content {
         LayoutMode: Left;
         Label #PortalTooltip {
           Padding: (Full: 10);
-          Style: (FontSize: 24, TextColor: #ffffff);
-          Text: "[M1]: Home / [M2]: Last Location";
+          Style: (FontSize: 20, TextColor: #ffffff);
+          Text: "[M1]: Teleport / [M2]: Save Location";
         }
     }
   }

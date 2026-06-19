@@ -5,31 +5,29 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
-import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
-import com.hypixel.hytale.protocol.ItemWithAllMetadata;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.Player;
+import com.hypixel.hytale.server.core.entity.entities.player.data.PlayerRespawnPointData;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
-import com.hypixel.hytale.server.core.inventory.ItemStack;
 import com.hypixel.hytale.server.core.modules.entity.component.TransformComponent;
 import com.hypixel.hytale.server.core.modules.entity.teleport.Teleport;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
-import com.hypixel.hytale.server.core.util.NotificationUtil;
 import java.util.Map;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.components.PocketPortalDataComponent;
 import net.marcelto.hytale.components.TeleportLocationComponent;
+import net.marcelto.hytale.utils.NotifyPlayer;
+import org.joml.Vector3d;
 
 public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.TeleportationData> {
-
-  private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
   private UICommandBuilder command;
   private UIEventBuilder events;
 
@@ -51,6 +49,8 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
   }
 
   private void buildList(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+    this.buildSpawnCard(ref, store);
+
     PocketPortalDataComponent portalData =
         store.getComponent(ref, PocketPortalDataComponent.getComponentType());
 
@@ -85,6 +85,32 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
     }
   }
 
+  private void buildSpawnCard(@Nonnull Ref<EntityStore> ref, @Nonnull Store<EntityStore> store) {
+    Player player = store.getComponent(ref, Player.getComponentType());
+    if (player == null) return;
+
+    World world = player.getWorld();
+    if (world == null) return;
+
+    PlayerRespawnPointData[] respawnPoints =
+        player.getPlayerConfigData().getPerWorldData(world.getName()).getRespawnPoints();
+
+    if (respawnPoints == null || respawnPoints.length == 0) return;
+
+    Vector3d spawnPos = respawnPoints[0].getRespawnPosition();
+    String coordString =
+        String.format(
+            "X: %d, Y: %d, Z: %d", (int) spawnPos.x(), (int) spawnPos.y(), (int) spawnPos.z());
+
+    this.command.append("#SpawnCards", "Pages/SpawnCard.ui");
+    this.command.set("#SpawnCards[0] #SpawnCoords.TextSpans", Message.raw(coordString));
+    this.events.addEventBinding(
+        CustomUIEventBindingType.Activating,
+        "#SpawnCards[0] #TeleportToSpawnButton",
+        EventData.of("Button", "Teleport:__spawn__"),
+        false);
+  }
+
   @Override
   public void handleDataEvent(
       @Nonnull Ref<EntityStore> ref,
@@ -97,7 +123,31 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
     PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
     if (playerRef == null) return;
 
-    if (data.button.startsWith("Teleport:")) {
+    if (data.button.equals("Teleport:__spawn__")) {
+      Player player = store.getComponent(ref, Player.getComponentType());
+      if (player == null) return;
+
+      World world = player.getWorld();
+      if (world == null) return;
+
+      PlayerRespawnPointData[] respawnPoints =
+          player.getPlayerConfigData().getPerWorldData(world.getName()).getRespawnPoints();
+
+      if (respawnPoints == null || respawnPoints.length == 0) {
+        NotifyPlayer.SendNotificationToPlayer(
+            playerRef, "No Spawn Found", "Could not find your spawn point.");
+        return;
+      }
+
+      Vector3d spawnPos = respawnPoints[0].getRespawnPosition();
+      TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
+      Rotation3f rotation = transform != null ? transform.getRotation() : new Rotation3f(0, 0, 0);
+
+      store.addComponent(ref, Teleport.getComponentType(), new Teleport(spawnPos, rotation));
+      NotifyPlayer.SendNotificationToPlayer(
+          playerRef, "Teleporting Home!", "Travelling to your spawn point...");
+      this.close();
+    } else if (data.button.startsWith("Teleport:")) {
       String name = data.button.substring("Teleport:".length());
       PocketPortalDataComponent portalData =
           store.getComponent(ref, PocketPortalDataComponent.getComponentType());
@@ -111,7 +161,8 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
 
       store.addComponent(
           ref, Teleport.getComponentType(), new Teleport(loc.getLocation(), rotation));
-      this.sendNotificationToPlayer(playerRef, "Teleporting!", "Travelling to '" + name + "'...");
+      NotifyPlayer.SendNotificationToPlayer(
+          playerRef, "Teleporting!", "Travelling to '" + name + "'...");
       this.close();
     } else if (data.button.startsWith("Delete:")) {
       String name = data.button.substring("Delete:".length());
@@ -119,21 +170,10 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
           store.getComponent(ref, PocketPortalDataComponent.getComponentType());
       if (portalData == null) return;
       portalData.removePortalPosition(name);
-      sendNotificationToPlayer(playerRef, "Location Deleted", "'" + name + "' has been removed.");
+      NotifyPlayer.SendNotificationToPlayer(
+          playerRef, "Location Deleted", "'" + name + "' has been removed.");
       this.rebuild();
     }
-  }
-
-  private void sendNotificationToPlayer(
-      @Nonnull PlayerRef playerRef, String message, String submessage) {
-    String color = "#c300ff";
-    String secondaryColor = "#c29cf3";
-    var packetHandler = playerRef.getPacketHandler();
-    var primaryMessage = Message.raw(message).color(color);
-    var secondaryMessage = Message.raw(submessage).color(secondaryColor);
-    var icon = new ItemStack("PocketPortal", 1).toPacket();
-    NotificationUtil.sendNotification(
-        packetHandler, primaryMessage, secondaryMessage, (ItemWithAllMetadata) icon);
   }
 
   public static class TeleportationData {
