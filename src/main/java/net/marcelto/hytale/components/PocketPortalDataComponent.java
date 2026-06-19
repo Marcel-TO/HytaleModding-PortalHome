@@ -1,70 +1,106 @@
 package net.marcelto.hytale.components;
 
-import com.hypixel.hytale.codec.Codec;
 import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.codec.codecs.map.MapCodec;
 import com.hypixel.hytale.codec.validation.Validators;
 import com.hypixel.hytale.component.Component;
-import com.hypixel.hytale.math.vector.Vector3dUtil;
+import com.hypixel.hytale.component.ComponentType;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.HashMap;
 import java.util.Map;
 import javax.annotation.Nullable;
-import org.joml.Vector3d;
 
 public class PocketPortalDataComponent implements Component<EntityStore> {
-  private Map<String, Vector3d> LastPortalPositions;
+  private Map<String, TeleportLocationComponent> portalPositions;
 
+  private static ComponentType<EntityStore, PocketPortalDataComponent> TYPE;
   public static final BuilderCodec<PocketPortalDataComponent> CODEC =
       PocketPortalDataComponent.buildCodec();
 
   public PocketPortalDataComponent() {
-    this.LastPortalPositions = new HashMap<>();
+    this.portalPositions = new HashMap<>();
   }
 
   public PocketPortalDataComponent(PocketPortalDataComponent other) {
-    this.LastPortalPositions = new HashMap<>(other.LastPortalPositions);
+    this.portalPositions = new HashMap<>(other.portalPositions);
+  }
+
+  public static ComponentType<EntityStore, PocketPortalDataComponent> getComponentType() {
+    return TYPE;
+  }
+
+  public static void setComponentType(ComponentType<EntityStore, PocketPortalDataComponent> type) {
+    TYPE = type;
   }
 
   public static BuilderCodec<PocketPortalDataComponent> buildCodec() {
-    var lastPortalPositionsCodec =
+    var portalPositionsCodec =
         new KeyedCodec<>(
-            "LastPortalPositions",
-            new MapCodec<>(Vector3dUtil.CODEC, HashMap<String, Vector3d>::new));
+            "PortalPositions",
+            new MapCodec<>(
+                TeleportLocationComponent.CODEC, HashMap<String, TeleportLocationComponent>::new));
 
     return BuilderCodec.builder(PocketPortalDataComponent.class, PocketPortalDataComponent::new)
         .append(
-            lastPortalPositionsCodec,
-            (data, value) -> data.LastPortalPositions = value,
-            (data) -> data.LastPortalPositions)
+            portalPositionsCodec,
+            (data, value) -> data.portalPositions = value,
+            (data) -> data.portalPositions)
         .addValidator(Validators.nonNull())
         .add()
         .build();
   }
 
-  public static final BuilderCodec<Vector3d> VECTOR3D_CODEC =
-      BuilderCodec.builder(Vector3d.class, Vector3d::new)
-          .appendInherited(
-              new KeyedCodec<>("X", Codec.DOUBLE), (o, i) -> o.x = i, o -> o.x, (o, p) -> o.x = p.x)
-          .add()
-          .appendInherited(
-              new KeyedCodec<>("Y", Codec.DOUBLE), (o, i) -> o.y = i, o -> o.y, (o, p) -> o.y = p.y)
-          .add()
-          .appendInherited(
-              new KeyedCodec<>("Z", Codec.DOUBLE), (o, i) -> o.z = i, o -> o.z, (o, p) -> o.z = p.z)
-          .add()
-          .build();
-
-  public Map<String, Vector3d> getLastPortalPositions() {
-    if (LastPortalPositions == null) {
-      LastPortalPositions = new HashMap<>();
+  public Map<String, TeleportLocationComponent> getportalPositions() {
+    if (portalPositions == null) {
+      portalPositions = new HashMap<>();
     }
-    return LastPortalPositions;
+    return portalPositions;
   }
 
-  public void setLastPortalPositions(Map<String, Vector3d> lastPortalPositions) {
-    this.LastPortalPositions = lastPortalPositions;
+  public void setportalPositions(Map<String, TeleportLocationComponent> portalPositions) {
+    this.portalPositions = portalPositions;
+  }
+
+  public boolean addPortalPosition(TeleportLocationComponent portalPosition) {
+    if (portalPosition == null) {
+      return false;
+    }
+
+    if (!(this.portalPositions instanceof HashMap)) {
+      this.portalPositions = new HashMap<>(this.portalPositions);
+    }
+
+    this.portalPositions.put(portalPosition.getName(), portalPosition);
+    return true;
+  }
+
+  public boolean renamePortalPosition(String oldName, String newName) {
+    if (oldName == null || newName == null || newName.isBlank()) {
+      return false;
+    }
+    if (!(this.portalPositions instanceof HashMap)) {
+      this.portalPositions = new HashMap<>(this.portalPositions);
+    }
+    TeleportLocationComponent existing = this.portalPositions.remove(oldName);
+    if (existing == null) {
+      return false;
+    }
+    this.portalPositions.put(
+        newName, new TeleportLocationComponent(newName, existing.getLocation()));
+    return true;
+  }
+
+  public boolean removePortalPosition(String name) {
+    if (name == null || this.portalPositions == null) {
+      return false;
+    }
+
+    if (!(this.portalPositions instanceof HashMap)) {
+      this.portalPositions = new HashMap<>(this.portalPositions);
+    }
+
+    return this.portalPositions.remove(name) != null;
   }
 
   @Nullable

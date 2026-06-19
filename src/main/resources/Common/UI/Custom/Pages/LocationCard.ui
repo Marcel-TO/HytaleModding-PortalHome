@@ -1,0 +1,48 @@
+$C = "../Common.ui";
+
+Group {
+  LayoutMode: Top;
+  Anchor: (Bottom: 6);
+  Background: $C.@InputBoxBackground;
+  Padding: (Left: 12, Right: 10, Top: 8, Bottom: 8);
+
+  Label #LocationName {
+    Style: (
+      FontSize: 14,
+      TextColor: #c29cf3,
+      RenderBold: true
+    );
+    Text: "Location";
+  }
+
+  Label #LocationCoords {
+    Anchor: (Top: 2, Bottom: 6);
+    Style: (
+      FontSize: 12,
+      TextColor: #c300ff
+    );
+    Text: "X: 0  Y: 0  Z: 0";
+  }
+
+  Group {
+    LayoutMode: CenterMiddle;
+    Anchor: (Height: 36);
+    Padding: (Full: 6);
+
+    $C.@TextButton #TeleportButton {
+        Anchor: (Height: 36);
+        FlexWeight: 6;
+        Text: "Teleport";
+      }
+
+     Group {
+        FlexWeight: 1;
+     }
+
+      $C.@TextButton #DeleteButton {
+          FlexWeight: 3;
+          Anchor: (Height: 36);
+          Text: "DELETE";
+      }
+  }
+}

@@ -29,7 +29,7 @@ public class PlayerJoinSystem extends RefSystem<EntityStore> {
     if (player == null || playerRef == null) return;
 
     PocketPortalHUD hud = new PocketPortalHUD(playerRef);
-    player.getHudManager().addCustomHud(playerRef, hud);
+    //    player.getHudManager().addCustomHud(playerRef, hud);
   }
 
   @Override
