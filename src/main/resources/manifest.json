@@ -17,7 +17,7 @@
     "OptionalDependencies": {
         
     },
-    "ServerVersion": ">=0.5.7",
+    "ServerVersion": ">=0.7.3",
     "Main": "net.marcelto.hytale.PortalHome",
     "UpdateChecker": {
         "CurseForge": "1442209"
