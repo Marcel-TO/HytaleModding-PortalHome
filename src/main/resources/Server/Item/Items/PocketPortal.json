@@ -3,7 +3,6 @@
     "Name": "server.items.PocketPortal.name",
     "Description": "server.items.PocketPortal.description"
   },
-  "Id": "PocketPortal",
   "Icon": "Icons/ItemsGenerated/PocketPortal.png",
   "Model": "Resources/Items/PocketPortal/PocketPortal.blockymodel",
   "Texture": "Resources/Items/PocketPortal/PocketPortal_Texture.png",
@@ -30,10 +29,10 @@
     ],
     "BenchRequirement": [
       {
-        "Id": "Workbench",
+        "Id": "GoblinLab_Workbench",
         "Type": "Crafting",
         "Categories": [
-          "Workbench_Survival"
+          "GoblinLab_Fragments"
         ]
       }
     ]
@@ -60,7 +59,7 @@
   },
   "Scale": 1.2,
   "Light": {
-    "Color": "#5e6eff",
+    "Color": "#35264f",
     "Radius": 0
   },
   "DropOnDeath": false,
@@ -152,7 +151,7 @@
       ]
     }
   },
-  "Animation": "Resources/Items/PocketPortal/Animations/PocketPortal_Interaction.blockyanim",
+  "Animation": "Resources/Items/GoblinPortal/Animations/portal_move.blockyanim",
   "UsePlayerAnimations": false,
   "PlayerAnimationsId": "Item"
 }

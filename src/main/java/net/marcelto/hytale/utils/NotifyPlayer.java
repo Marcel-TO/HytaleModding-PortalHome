@@ -16,7 +16,7 @@ public class NotifyPlayer {
   public static final String GOBLINPORTALITEM = "GoblinPortal";
 
   public static final String ERRORCOLOR = "#ff0000";
-  public static final String ERRORSECONDARY = "#e00000";
+  public static final String ERRORSECONDARY = "#e30000";
 
   public static void SendNotificationToPlayer(
       @Nonnull PlayerRef playerRef,

@@ -6,7 +6,7 @@
       {
         "SystemId": "MagicPortal_GS",
         "TargetEntityPart": "PrimaryItem",
-        "Color": "#11189b",
+        "Color": "#35264f",
         "Scale": 0.2,
         "PositionOffset": {
           "Y": 0.1,
@@ -19,7 +19,7 @@
       {
         "SystemId": "MagicPortal_GS",
         "TargetEntityPart": "Entity",
-        "Color": "#11189b",
+        "Color": "#35264f",
         "ClearParticlesOnRemove": true,
         "DetachedFromModel": false
       }

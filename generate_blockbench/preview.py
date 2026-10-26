@@ -1,11 +1,19 @@
-import json, math, sys
+import argparse, json, math, tempfile
+from pathlib import Path
 import numpy as np
 from PIL import Image, ImageDraw
 
-BASE = r"G:\Github\HytaleModding\_Plugins\PortalHome\src\main\resources\Common\Resources\Items\GoblinPortal"
-OUT = r"C:\Users\marce\.copilot\session-state\057d3cc5-476c-443e-8207-52554dbede52\files"
-model = json.load(open(BASE + r"\GoblinPortal.blockymodel"))
-tex = Image.open(BASE + r"\GoblinPortal_Texture.png").convert('RGBA')
+parser = argparse.ArgumentParser(description='Render preview images for a generated portal model.')
+parser.add_argument('model', nargs='?', default='GoblinPortal', choices=['GoblinPortal', 'PocketPortal'])
+parser.add_argument('--out', type=Path, default=Path(tempfile.gettempdir()) / 'portal_previews')
+args = parser.parse_args()
+
+ROOT = Path(__file__).resolve().parents[1]
+BASE = ROOT / 'src' / 'main' / 'resources' / 'Common' / 'Resources' / 'Items' / args.model
+OUT = args.out / args.model
+OUT.mkdir(parents=True, exist_ok=True)
+model = json.load(open(BASE / f'{args.model}.blockymodel'))
+tex = Image.open(BASE / f'{args.model}_Texture.png').convert('RGBA')
 
 
 def qmat(q):
@@ -87,7 +95,7 @@ def render(yaw, pitch, name, scale=14, size=520):
     d = ImageDraw.Draw(img)
     for _, poly, c in items:
         d.polygon(poly, fill=c, outline=c)
-    img.save(f"{OUT}\\{name}.png")
+    img.save(OUT / f'{name}.png')
     return img
 
 
@@ -95,5 +103,5 @@ views = [render(-30, 15, 'pv_front34'), render(0, 0, 'pv_front'), render(180, 0,
 sheet = Image.new('RGB', (1040, 1040))
 for k, im in enumerate(views):
     sheet.paste(im, ((k % 2) * 520, (k // 2) * 520))
-sheet.save(OUT + r"\preview_sheet.png")
-tex.resize((512, 512), Image.NEAREST).save(OUT + r"\texture_big.png")
+sheet.save(OUT / 'preview_sheet.png')
+tex.resize((512, 512), Image.NEAREST).save(OUT / 'texture_big.png')
