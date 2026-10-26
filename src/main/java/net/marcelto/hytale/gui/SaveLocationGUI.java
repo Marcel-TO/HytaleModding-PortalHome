@@ -9,11 +9,13 @@ import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
 import com.hypixel.hytale.server.core.Message;
+import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.entity.entities.player.pages.InteractiveCustomUIPage;
 import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.components.PocketPortalDataComponent;
@@ -22,10 +24,6 @@ import net.marcelto.hytale.utils.NotifyPlayer;
 import org.joml.Vector3d;
 
 public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.SaveData> {
-  private static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
-
-  private static final String UI_PATH = "Pages/TeleportLocations.ui";
-
   private UICommandBuilder command;
   private UIEventBuilder events;
   private String nameInput = "";
@@ -76,6 +74,12 @@ public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.Sav
     if (data.button != null && !data.button.isEmpty()) {
       PlayerRef playerRef = store.getComponent(ref, PlayerRef.getComponentType());
       assert playerRef != null;
+      Player player = store.getComponent(ref, Player.getComponentType());
+      World world = player != null ? player.getWorld() : null;
+      if (world == null) {
+        playerRef.sendMessage(Message.raw("Error: Current world not found. Cannot save location."));
+        return;
+      }
 
       if (data.button.equals("Save")) {
         this.nameInput = data.nameValue != null ? data.nameValue : "";
@@ -95,11 +99,15 @@ public class SaveLocationGUI extends InteractiveCustomUIPage<SaveLocationGUI.Sav
         }
 
         portalDataComponent.addPortalPosition(
-            new TeleportLocationComponent(this.nameInput, this.lastStoredPosition));
+            new TeleportLocationComponent(
+                this.nameInput, this.lastStoredPosition, world.getName()));
         NotifyPlayer.SendNotificationToPlayer(
             playerRef,
             "Location Saved!",
-            "Your location '" + this.nameInput + "' has been saved successfully.");
+            "Your location '" + this.nameInput + "' has been saved successfully.",
+            NotifyPlayer.POCKETPORTALCOLOR,
+            NotifyPlayer.POCKETPORTALSECONDARY,
+            NotifyPlayer.POCKETPORTALITEM);
         this.close();
       }
     }

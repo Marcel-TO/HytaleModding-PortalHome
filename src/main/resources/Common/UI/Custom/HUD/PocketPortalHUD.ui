@@ -1,7 +1,7 @@
 $C = "../Common.ui";
 
 
-Group #Content {
+Group #PocketPortalContent {
     LayoutMode: MiddleCenter;
     Anchor: (Top: 700);
     FlexWeight: 1;

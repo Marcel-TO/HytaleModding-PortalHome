@@ -14,7 +14,7 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.gui.PocketPortalHUD;
 
-public class HudTickingSystem extends EntityTickingSystem<EntityStore> {
+public class HudPocketPortalSystem extends EntityTickingSystem<EntityStore> {
 
   @Override
   public void tick(
@@ -37,7 +37,10 @@ public class HudTickingSystem extends EntityTickingSystem<EntityStore> {
     // Determine item in hand
     ItemStack heldItem =
         InventoryComponent.getItemInHand(commandBuffer, chunk.getReferenceTo(index));
-    if (heldItem == null) return;
+    if (heldItem == null) {
+      hud.updateHUD(false);
+      return;
+    }
 
     boolean shouldVisible = heldItem.getItemId().equals("PocketPortal");
     hud.updateHUD(shouldVisible);

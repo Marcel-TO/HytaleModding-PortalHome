@@ -5,6 +5,7 @@ import com.hypixel.hytale.codec.KeyedCodec;
 import com.hypixel.hytale.codec.builder.BuilderCodec;
 import com.hypixel.hytale.component.Ref;
 import com.hypixel.hytale.component.Store;
+import com.hypixel.hytale.logger.HytaleLogger;
 import com.hypixel.hytale.math.vector.Rotation3f;
 import com.hypixel.hytale.protocol.packets.interface_.CustomPageLifetime;
 import com.hypixel.hytale.protocol.packets.interface_.CustomUIEventBindingType;
@@ -18,9 +19,11 @@ import com.hypixel.hytale.server.core.ui.builder.EventData;
 import com.hypixel.hytale.server.core.ui.builder.UICommandBuilder;
 import com.hypixel.hytale.server.core.ui.builder.UIEventBuilder;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
+import com.hypixel.hytale.server.core.universe.Universe;
 import com.hypixel.hytale.server.core.universe.world.World;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.components.PocketPortalDataComponent;
 import net.marcelto.hytale.components.TeleportLocationComponent;
@@ -34,6 +37,8 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
   public TeleportationGUI(@Nonnull PlayerRef playerRef, @Nonnull CustomPageLifetime lifetime) {
     super(playerRef, lifetime, TeleportationData.CODEC);
   }
+
+  public static final HytaleLogger LOGGER = HytaleLogger.forEnclosingClass();
 
   @Override
   public void build(
@@ -70,6 +75,9 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
       this.command.set(
           String.format("#IndexCards[%d] #LocationCoords.TextSpans", i),
           Message.raw(loc.getLocationString()));
+      this.command.set(
+          String.format("#IndexCards[%d] #LocationWorld.TextSpans", i),
+          Message.raw(loc.getWorldName()));
 
       this.events.addEventBinding(
           CustomUIEventBindingType.Activating,
@@ -135,7 +143,12 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
 
       if (respawnPoints == null || respawnPoints.length == 0) {
         NotifyPlayer.SendNotificationToPlayer(
-            playerRef, "No Spawn Found", "Could not find your spawn point.");
+            playerRef,
+            "No Spawn Found",
+            "Could not find your spawn point.",
+            NotifyPlayer.ERRORCOLOR,
+            NotifyPlayer.ERRORSECONDARY,
+            NotifyPlayer.POCKETPORTALITEM);
         return;
       }
 
@@ -145,7 +158,12 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
 
       store.addComponent(ref, Teleport.getComponentType(), new Teleport(spawnPos, rotation));
       NotifyPlayer.SendNotificationToPlayer(
-          playerRef, "Teleporting Home!", "Travelling to your spawn point...");
+          playerRef,
+          "Teleporting Home!",
+          "Travelling to your spawn point...",
+          NotifyPlayer.POCKETPORTALCOLOR,
+          NotifyPlayer.POCKETPORTALSECONDARY,
+          NotifyPlayer.POCKETPORTALITEM);
       this.close();
     } else if (data.button.startsWith("Teleport:")) {
       String name = data.button.substring("Teleport:".length());
@@ -158,11 +176,38 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
 
       TransformComponent transform = store.getComponent(ref, TransformComponent.getComponentType());
       Rotation3f rotation = transform != null ? transform.getRotation() : new Rotation3f(0, 0, 0);
+      String targetWorldName = loc.getWorldName();
+      Teleport teleport;
+      if (targetWorldName == null) {
+        // Locations saved before world tracking retain their current-world behavior.
+        teleport = Teleport.createForPlayer(loc.getLocation(), rotation);
+      } else {
+        World world = Universe.get().getWorld(targetWorldName);
+        if (world == null) {
+          loadWorldAndTeleport(ref, store, playerRef, loc, rotation);
+          return;
+        }
+        if (!world.isAlive()) {
+          NotifyPlayer.SendNotificationToPlayer(
+              playerRef,
+              "World Unavailable",
+              "The destination world '" + targetWorldName + "' is shutting down.",
+              NotifyPlayer.ERRORCOLOR,
+              NotifyPlayer.ERRORSECONDARY,
+              NotifyPlayer.POCKETPORTALITEM);
+          return;
+        }
+        teleport = Teleport.createForPlayer(world, loc.getLocation(), rotation);
+      }
 
-      store.addComponent(
-          ref, Teleport.getComponentType(), new Teleport(loc.getLocation(), rotation));
+      store.addComponent(ref, Teleport.getComponentType(), teleport);
       NotifyPlayer.SendNotificationToPlayer(
-          playerRef, "Teleporting!", "Travelling to '" + name + "'...");
+          playerRef,
+          "Teleporting!",
+          "Travelling to '" + name + "'...",
+          NotifyPlayer.POCKETPORTALCOLOR,
+          NotifyPlayer.POCKETPORTALSECONDARY,
+          NotifyPlayer.POCKETPORTALITEM);
       this.close();
     } else if (data.button.startsWith("Delete:")) {
       String name = data.button.substring("Delete:".length());
@@ -171,9 +216,102 @@ public class TeleportationGUI extends InteractiveCustomUIPage<TeleportationGUI.T
       if (portalData == null) return;
       portalData.removePortalPosition(name);
       NotifyPlayer.SendNotificationToPlayer(
-          playerRef, "Location Deleted", "'" + name + "' has been removed.");
+          playerRef,
+          "Location Deleted",
+          "'" + name + "' has been removed.",
+          NotifyPlayer.POCKETPORTALCOLOR,
+          NotifyPlayer.POCKETPORTALSECONDARY,
+          NotifyPlayer.POCKETPORTALITEM);
       this.rebuild();
     }
+  }
+
+  private void loadWorldAndTeleport(
+      Ref<EntityStore> ref,
+      Store<EntityStore> store,
+      PlayerRef playerRef,
+      TeleportLocationComponent location,
+      Rotation3f rotation) {
+    World sourceWorld = store.getExternalData().getWorld();
+    String worldName = location.getWorldName();
+    String locationName = location.getName();
+    Vector3d destination = new Vector3d(location.getLocation());
+    Rotation3f destinationRotation = new Rotation3f(rotation);
+    CompletableFuture<World> loading;
+    try {
+      loading = Universe.get().loadWorld(worldName);
+    } catch (IllegalArgumentException error) {
+      LOGGER.atSevere().log("Cannot load world '%s': %s", worldName, error);
+      NotifyPlayer.SendNotificationToPlayer(
+          playerRef,
+          "Teleport Failed",
+          "The destination world could not be loaded.",
+          NotifyPlayer.ERRORCOLOR,
+          NotifyPlayer.ERRORSECONDARY,
+          NotifyPlayer.POCKETPORTALITEM);
+      return;
+    }
+
+    NotifyPlayer.SendNotificationToPlayer(
+        playerRef,
+        "Loading World",
+        "Loading the destination world '" + worldName + "'...",
+        NotifyPlayer.POCKETPORTALCOLOR,
+        NotifyPlayer.POCKETPORTALSECONDARY,
+        NotifyPlayer.POCKETPORTALITEM);
+    this.close();
+
+    loading
+        .whenCompleteAsync(
+            (loadedWorld, error) -> {
+              if (error != null) {
+                LOGGER.atSevere().log("Failed to load world '%s': %s", worldName, error);
+              }
+
+              // Loading may finish after the player disconnects or changes worlds.
+              if (!ref.isValid() || !ref.equals(playerRef.getReference())) {
+                return;
+              }
+              if (error != null) {
+                NotifyPlayer.SendNotificationToPlayer(
+                    playerRef,
+                    "Teleport Failed",
+                    "Could not load the destination world.",
+                    NotifyPlayer.ERRORCOLOR,
+                    NotifyPlayer.ERRORSECONDARY,
+                    NotifyPlayer.POCKETPORTALITEM);
+                return;
+              }
+              if (loadedWorld == null || !loadedWorld.isAlive()) {
+                NotifyPlayer.SendNotificationToPlayer(
+                    playerRef,
+                    "Teleport Failed",
+                    "The destination world is unavailable.",
+                    NotifyPlayer.ERRORCOLOR,
+                    NotifyPlayer.ERRORSECONDARY,
+                    NotifyPlayer.POCKETPORTALITEM);
+                return;
+              }
+
+              store.addComponent(
+                  ref,
+                  Teleport.getComponentType(),
+                  Teleport.createForPlayer(loadedWorld, destination, destinationRotation));
+              NotifyPlayer.SendNotificationToPlayer(
+                  playerRef,
+                  "Teleporting!",
+                  "Travelling to '" + locationName + "'...",
+                  NotifyPlayer.POCKETPORTALCOLOR,
+                  NotifyPlayer.POCKETPORTALSECONDARY,
+                  NotifyPlayer.POCKETPORTALITEM);
+            },
+            sourceWorld)
+        .exceptionally(
+            error -> {
+              LOGGER.atSevere().log(
+                  "Failed to complete teleport to world '%s': %s", worldName, error);
+              return null;
+            });
   }
 
   public static class TeleportationData {

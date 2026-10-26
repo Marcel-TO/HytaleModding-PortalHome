@@ -87,7 +87,8 @@ public class PocketPortalDataComponent implements Component<EntityStore> {
       return false;
     }
     this.portalPositions.put(
-        newName, new TeleportLocationComponent(newName, existing.getLocation()));
+        newName,
+        new TeleportLocationComponent(newName, existing.getLocation(), existing.getWorldName()));
     return true;
   }
 

@@ -1,164 +1,158 @@
 {
-    "TranslationProperties": {
-        "Name": "Pocket Portal",
-        "Description": "A handy companion for closing the dimension between your adventure and your home."
-    },
-    "Id": "PocketPortal",
-    "Icon": "Icons/ItemsGenerated/PocketPortal.png",
-    "Model": "Resources/Items/PocketPortal/PocketPortal.blockymodel",
-    "Texture": "Resources/Items/PocketPortal/PocketPortal_Texture.png",
-    "Quality": "Legendary",
-    "MaxStack": 1,
-    "Categories": [
-        "Items.Portal"
+  "TranslationProperties": {
+    "Name": "server.items.PocketPortal.name",
+    "Description": "server.items.PocketPortal.description"
+  },
+  "Id": "PocketPortal",
+  "Icon": "Icons/ItemsGenerated/PocketPortal.png",
+  "Model": "Resources/Items/PocketPortal/PocketPortal.blockymodel",
+  "Texture": "Resources/Items/PocketPortal/PocketPortal_Texture.png",
+  "Quality": "Legendary",
+  "MaxStack": 1,
+  "Categories": [
+    "Items.Portal"
+  ],
+  "Recipe": {
+    "TimeSeconds": 3.5,
+    "Input": [
+      {
+        "ItemId": "Ingredient_Life_Essence",
+        "Quantity": 15
+      },
+      {
+        "ItemId": "Ingredient_Fire_Essence",
+        "Quantity": 15
+      },
+      {
+        "ItemId": "Ingredient_Void_Essence",
+        "Quantity": 15
+      }
     ],
-    "Recipe": {
-        "TimeSeconds": 3.5,
-        "Input": [
-            {
-                "ItemId": "Ingredient_Life_Essence",
-                "Quantity": 15
-            },
-            {
-                "ItemId": "Ingredient_Fire_Essence",
-                "Quantity": 15
-            },
-            {
-                "ItemId": "Ingredient_Void_Essence",
-                "Quantity": 15
-            }
-        ],
-        "BenchRequirement": [
-            {
-                "Id": "Workbench",
-                "Type": "Crafting",
-                "Categories": [
-                    "Workbench_Survival"
-                ]
-            }
+    "BenchRequirement": [
+      {
+        "Id": "Workbench",
+        "Type": "Crafting",
+        "Categories": [
+          "Workbench_Survival"
         ]
-    },
-    "IconProperties": {
-        "Scale": 0.9,
-        "Rotation": [
-            0,
-            0,
-            0
-        ],
-        "Translation": [
-            0,
-            -13
-        ]
-    },
-    "Tags": {
-        "Type": [
-            "Portal"
-        ],
-        "Family": [
-            "Fast_Travel"
-        ]
-    },
-    "Scale": 1.2,
-    "Light": {
-        "Color": "#5e6eff",
-        "Radius": 0
-    },
-    "DropOnDeath": false,
-    "Interactions": {
-        "Primary": {
-            "Interactions": [
-                {
-                    "Type": "Condition",
-                    "Crouching": false,
-                    "Failed": "Block_Secondary",
-                    "Next": {
-                        "Type": "Charging",
-                        "FailOnDamage": true,
-                        "Effects": {
-                            "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
-                            "ClearAnimationOnFinish": true,
-                            "ClearSoundEventOnFinish": true,
-                            "FirstPersonParticles": [
-                                {
-                                    "SystemId": "Teleport",
-                                    "TargetEntityPart": "PrimaryItem",
-                                    "Color": "#11189b",
-                                    "Scale": 0.2,
-                                    "PositionOffset": {
-                                        "Y": 0.1
-                                    }
-                                }
-                            ],
-                            "Particles": [
-                                {
-                                    "SystemId": "Teleport",
-                                    "TargetEntityPart": "Entity",
-                                    "Color": "#11189b"
-                                }
-                            ]
-                        },
-                        "HorizontalSpeedMultiplier": 0.4,
-                        "Next": {
-                            "2.5": {
-                                "Type": "PocketPortal_TeleportInteraction"
-                            }
-                        },
-                        "Failed": {
-                            "Type": "Simple"
-                        }
-                    }
+      }
+    ]
+  },
+  "IconProperties": {
+    "Scale": 0.9,
+    "Rotation": [
+      0,
+      0,
+      0
+    ],
+    "Translation": [
+      0,
+      -13
+    ]
+  },
+  "Tags": {
+    "Type": [
+      "Portal"
+    ],
+    "Family": [
+      "Fast_Travel"
+    ]
+  },
+  "Scale": 1.2,
+  "Light": {
+    "Color": "#5e6eff",
+    "Radius": 0
+  },
+  "DropOnDeath": false,
+  "Interactions": {
+    "Primary": {
+      "Interactions": [
+        {
+          "Type": "Condition",
+          "Crouching": false,
+          "Failed": "Block_Secondary",
+          "Next": {
+            "Type": "ApplyEffect",
+            "EffectId": "PocketPortal_Charging",
+            "Next": {
+              "Type": "Charging",
+              "AllowIndefiniteHold": false,
+              "FailOnDamage": true,
+              "Effects": {
+                "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                "ClearAnimationOnFinish": true,
+                "ClearSoundEventOnFinish": true,
+                "WaitForAnimationToFinish": false
+              },
+              "HorizontalSpeedMultiplier": 0.4,
+              "Next": {
+                "0": {
+                  "Type": "ClearEntityEffect",
+                  "EntityEffectId": "PocketPortal_Charging"
+                },
+                "2.5": {
+                  "Type": "ClearEntityEffect",
+                  "EntityEffectId": "PocketPortal_Charging",
+                  "Next": {
+                    "Type": "PocketPortal_TeleportInteraction"
+                  }
                 }
-            ]
-        },
-        "Secondary": {
-            "Interactions": [
-                {
-                    "Type": "Condition",
-                    "Crouching": false,
-                    "Failed": "Block_Secondary",
-                    "Next": {
-                        "Type": "Charging",
-                        "FailOnDamage": true,
-                        "Effects": {
-                            "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
-                            "ClearAnimationOnFinish": true,
-                            "ClearSoundEventOnFinish": true,
-                            "FirstPersonParticles": [
-                                {
-                                    "SystemId": "Teleport",
-                                    "TargetEntityPart": "PrimaryItem",
-                                    "Color": "#11189b",
-                                    "Scale": 0.2,
-                                    "PositionOffset": {
-                                        "Y": 0.1,
-                                        "X": 0,
-                                        "Z": 0
-                                    }
-                                }
-                            ],
-                            "Particles": [
-                                {
-                                    "SystemId": "Teleport",
-                                    "TargetEntityPart": "Entity",
-                                    "Color": "#11189b"
-                                }
-                            ]
-                        },
-                        "HorizontalSpeedMultiplier": 0.4,
-                        "Next": {
-                            "2.5": {
-                                "Type": "PocketPortal_SaveLocation"
-                            }
-                        },
-                        "Failed": {
-                            "Type": "Simple"
-                        }
-                    }
-                }
-            ]
+              },
+              "Failed": {
+                "Type": "ClearEntityEffect",
+                "EntityEffectId": "PocketPortal_Charging"
+              },
+              "CancelOnItemChange": false
+            }
+          }
         }
+      ]
     },
-    "Animation": "Resources/Items/PocketPortal/Animations/PocketPortal_Interaction.blockyanim",
-    "UsePlayerAnimations": false,
-    "PlayerAnimationsId": "Item"
+    "Secondary": {
+      "Interactions": [
+        {
+          "Type": "Condition",
+          "Crouching": false,
+          "Failed": "Block_Secondary",
+          "Next": {
+            "Type": "ApplyEffect",
+            "EffectId": "PocketPortal_Charging",
+            "Next": {
+              "Type": "Charging",
+              "AllowIndefiniteHold": false,
+              "FailOnDamage": true,
+              "Effects": {
+                "CustomModelAnimation": "Resources/Animations/PocketPortal_Interaction.blockyanim",
+                "ClearAnimationOnFinish": true,
+                "ClearSoundEventOnFinish": true,
+                "WaitForAnimationToFinish": false
+              },
+              "HorizontalSpeedMultiplier": 0.4,
+              "Next": {
+                "0": {
+                  "Type": "ClearEntityEffect",
+                  "EntityEffectId": "PocketPortal_Charging"
+                },
+                "2.5": {
+                  "Type": "ClearEntityEffect",
+                  "EntityEffectId": "PocketPortal_Charging",
+                  "Next": {
+                    "Type": "PocketPortal_SaveLocation"
+                  }
+                }
+              },
+              "Failed": {
+                "Type": "ClearEntityEffect",
+                "EntityEffectId": "PocketPortal_Charging"
+              },
+              "CancelOnItemChange": false
+            }
+          }
+        }
+      ]
+    }
+  },
+  "Animation": "Resources/Items/PocketPortal/Animations/PocketPortal_Interaction.blockyanim",
+  "UsePlayerAnimations": false,
+  "PlayerAnimationsId": "Item"
 }

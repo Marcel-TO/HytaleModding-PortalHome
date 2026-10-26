@@ -6,13 +6,29 @@ Group {
   Background: $C.@InputBoxBackground;
   Padding: (Left: 12, Right: 10, Top: 8, Bottom: 8);
 
-  Label #LocationName {
-    Style: (
-      FontSize: 14,
-      TextColor: #c29cf3,
-      RenderBold: true
-    );
-    Text: "Location";
+  Group {
+    LayoutMode: Left;
+    Anchor: (Bottom: 6);
+
+    Label #LocationName {
+        Style: (
+          FontSize: 14,
+          TextColor: #c29cf3,
+          RenderBold: true
+        );
+        Text: "Location";
+      }
+
+      Group {
+              FlexWeight: 1;
+           }
+
+      Label #LocationWorld {
+          Anchor: (Top: 2, Bottom: 6);
+          Text: "World: Default";
+          Style: (FontSize: 12,
+            TextColor: #c4b9c7);
+      }
   }
 
   Label #LocationCoords {

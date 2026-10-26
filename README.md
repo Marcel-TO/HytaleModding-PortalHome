@@ -14,6 +14,11 @@ Hold either interaction for **2.5 seconds** (while standing—crouching blocks a
 
 A custom **HUD indicator** appears whenever the Pocket Portal is in your hand, so you always know the item is ready.
 
+New waypoints remember the world where they were saved. If the destination world is not loaded,
+the server loads the existing world before teleporting you. Missing worlds and loading failures
+produce a notification instead of creating a new world. Older waypoints without a saved world
+name continue to teleport within your current world.
+
 ### **Features**
 
 *   **Multi-Location Waypoint System**: Save unlimited named locations and manage them from the teleport menu

@@ -16,17 +16,20 @@ public class TeleportLocationComponent implements Component<EntityStore> {
   public static final BuilderCodec<TeleportLocationComponent> CODEC = buildCodec();
   private Vector3d location;
   private String name;
+  private String worldName;
 
   public TeleportLocationComponent() {}
 
-  public TeleportLocationComponent(String name, Vector3d location) {
+  public TeleportLocationComponent(String name, Vector3d location, String worldName) {
     this.name = name;
     this.location = location;
+    this.worldName = worldName;
   }
 
   public TeleportLocationComponent(TeleportLocationComponent other) {
     this.location = other.location;
     this.name = other.name;
+    this.worldName = other.worldName;
   }
 
   public String getName() {
@@ -35,6 +38,10 @@ public class TeleportLocationComponent implements Component<EntityStore> {
 
   public Vector3d getLocation() {
     return this.location;
+  }
+
+  public String getWorldName() {
+    return this.worldName;
   }
 
   public String getLocationString() {
@@ -50,6 +57,7 @@ public class TeleportLocationComponent implements Component<EntityStore> {
   public static BuilderCodec<TeleportLocationComponent> buildCodec() {
     var teleportLocation = new KeyedCodec<>("TeleportLocation", Vector3dUtil.CODEC);
     KeyedCodec<String> teleportName = new KeyedCodec<>("TeleportName", Codec.STRING);
+    KeyedCodec<String> teleportWorldName = new KeyedCodec<>("TeleportWorldName", Codec.STRING);
 
     return BuilderCodec.builder(TeleportLocationComponent.class, TeleportLocationComponent::new)
         .append(teleportLocation, (data, value) -> data.location = value, (data) -> data.location)
@@ -57,6 +65,9 @@ public class TeleportLocationComponent implements Component<EntityStore> {
         .add()
         .append(teleportName, (data, value) -> data.name = value, (data) -> data.name)
         .addValidator(Validators.nonNull())
+        .add()
+        .append(
+            teleportWorldName, (data, value) -> data.worldName = value, (data) -> data.worldName)
         .add()
         .build();
   }

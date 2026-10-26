@@ -1,0 +1,29 @@
+{
+  "Duration": 3.0,
+  "OverlapBehavior": "Overwrite",
+  "ApplicationEffects": {
+    "FirstPersonParticles": [
+      {
+        "SystemId": "MagicPortal_GS",
+        "TargetEntityPart": "PrimaryItem",
+        "Color": "#7ef02c",
+        "Scale": 0.2,
+        "PositionOffset": {
+          "Y": 0.4,
+          "Z": -0.1
+        },
+        "ClearParticlesOnRemove": true,
+        "DetachedFromModel": false
+      }
+    ],
+    "Particles": [
+      {
+        "SystemId": "MagicPortal_GS",
+        "TargetEntityPart": "Entity",
+        "Color": "#7ef02c",
+        "ClearParticlesOnRemove": true,
+        "DetachedFromModel": false
+      }
+    ]
+  }
+}

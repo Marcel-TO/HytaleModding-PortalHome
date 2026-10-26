@@ -1,0 +1,16 @@
+$C = "../Common.ui";
+
+
+Group #GoblinPortalContent {
+    LayoutMode: MiddleCenter;
+    Anchor: (Top: 700);
+    FlexWeight: 1;
+    Group {
+        LayoutMode: Left;
+        Label #PortalTooltip {
+          Padding: (Full: 10);
+          Style: (FontSize: 20, TextColor: #ffffff);
+          Text: "[M1]: Teleport to Lab / [M2]: Teleport Back";
+        }
+    }
+  }

@@ -19,7 +19,7 @@ public class PocketPortalHUD extends CustomUIHud {
 
   public void updateHUD(boolean visible) {
     UICommandBuilder patch = new UICommandBuilder();
-    patch.set("#Content.Visible", visible);
+    patch.set("#PocketPortalContent.Visible", visible);
     update(false, patch);
   }
 }

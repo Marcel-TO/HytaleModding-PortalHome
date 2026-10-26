@@ -11,6 +11,7 @@ import com.hypixel.hytale.component.system.RefSystem;
 import com.hypixel.hytale.server.core.entity.entities.Player;
 import com.hypixel.hytale.server.core.universe.PlayerRef;
 import com.hypixel.hytale.server.core.universe.world.storage.EntityStore;
+import net.marcelto.hytale.gui.GoblinPortalHUD;
 import net.marcelto.hytale.gui.PocketPortalHUD;
 import org.checkerframework.checker.nullness.compatqual.NonNullDecl;
 import org.checkerframework.checker.nullness.compatqual.NullableDecl;
@@ -28,8 +29,13 @@ public class PlayerJoinSystem extends RefSystem<EntityStore> {
     var playerRef = store.getComponent(ref, PlayerRef.getComponentType());
     if (player == null || playerRef == null) return;
 
+    // Add Pocket Portal HUD to the player's HUD manager
     PocketPortalHUD hud = new PocketPortalHUD(playerRef);
     player.getHudManager().addCustomHud(playerRef, hud);
+
+    // Add Goblin Portal HUD to the player's HUD manager
+    GoblinPortalHUD goblinPortalHUD = new GoblinPortalHUD(playerRef);
+    player.getHudManager().addCustomHud(playerRef, goblinPortalHUD);
   }
 
   @Override

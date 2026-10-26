@@ -7,8 +7,11 @@ import com.hypixel.hytale.server.core.plugin.JavaPluginInit;
 import javax.annotation.Nonnull;
 import net.marcelto.hytale.components.PocketPortalDataComponent;
 import net.marcelto.hytale.interactions.SaveLocationInteraction;
+import net.marcelto.hytale.interactions.TeleportBackGoblinInteraction;
 import net.marcelto.hytale.interactions.TeleportInteraction;
-import net.marcelto.hytale.systems.HudTickingSystem;
+import net.marcelto.hytale.interactions.TeleportToGoblinInteraction;
+import net.marcelto.hytale.systems.HudGoblinPortalSystem;
+import net.marcelto.hytale.systems.HudPocketPortalSystem;
 import net.marcelto.hytale.systems.PlayerJoinSystem;
 
 public class PortalHome extends JavaPlugin {
@@ -44,9 +47,20 @@ public class PortalHome extends JavaPlugin {
             "PocketPortal_TeleportInteraction",
             TeleportInteraction.class,
             TeleportInteraction.CODEC);
+    this.getCodecRegistry(Interaction.CODEC)
+        .register(
+            "GoblinPortal_TeleportInteraction",
+            TeleportToGoblinInteraction.class,
+            TeleportToGoblinInteraction.CODEC);
+    this.getCodecRegistry(Interaction.CODEC)
+        .register(
+            "GoblinPortal_TeleportBackInteraction",
+            TeleportBackGoblinInteraction.class,
+            TeleportBackGoblinInteraction.CODEC);
 
     // Systems
-    this.getEntityStoreRegistry().registerSystem(new HudTickingSystem());
+    this.getEntityStoreRegistry().registerSystem(new HudPocketPortalSystem());
+    this.getEntityStoreRegistry().registerSystem(new HudGoblinPortalSystem());
     this.getEntityStoreRegistry().registerSystem(new PlayerJoinSystem());
   }
 }
