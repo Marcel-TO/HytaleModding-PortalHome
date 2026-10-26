@@ -1,48 +1,46 @@
-## **PortalHome - Your Dimensional Tether**
+# PortalHome
 
-**Never lose your way back home again.**
+PortalHome adds two craftable portals to Hytale: the Pocket Portal for saving and revisiting your own locations, and the Goblin Portal for travelling to and returning from the Goblin Lab.
 
-PortalHome introduces the **Pocket Portal**, a legendary mystical artifact that serves as your personal waypoint network in the world of Hytale. This isn't just another teleportation item—it's a full named-location system that lets you bookmark any spot in the world and jump between them instantly. Save as many locations as you need, teleport back to spawn on demand, and manage your waypoints through a clean in-game UI.
+## Pocket Portal
 
-### **How It Works**
+Use the Pocket Portal to build a personal list of destinations.
 
-Hold either interaction for **2.5 seconds** (while standing—crouching blocks activation) to trigger the portal. Blue particles and a custom animation play during the charge-up.
+- Hold **Primary Interaction** for 2.5 seconds to open the teleport menu. Choose your world spawn or a saved location, or delete a saved location.
+- Hold **Secondary Interaction** for 2.5 seconds to open the save menu and name your current location.
+- Saved locations include their world, so you can travel between worlds. The saved world must still exist on the server; the portal loads it if needed.
 
-1.  **Hold Primary Interaction (Open Teleport Menu)**: Opens the destination picker, showing your **world spawn point** and every saved named location. Pick any destination and teleport instantly. You can also delete saved locations directly from this screen.
+The portal shows a HUD indicator while held. It has a maximum stack size of one and is kept on death.
 
-2.  **Hold Secondary Interaction (Save Current Location)**: Opens the save menu with your **current coordinates** displayed. Type a custom name and confirm to bookmark the spot for future teleports.
+### Pocket Portal recipe
 
-A custom **HUD indicator** appears whenever the Pocket Portal is in your hand, so you always know the item is ready.
+Craft at a Goblin Lab workbench:
 
-New waypoints remember the world where they were saved. If the destination world is not loaded,
-the server loads the existing world before teleporting you. Missing worlds and loading failures
-produce a notification instead of creating a new world. Older waypoints without a saved world
-name continue to teleport within your current world.
+- 15 Life Essence
+- 15 Fire Essence
+- 15 Void Essence
 
-### **Features**
+Craft time: 3.5 seconds.
 
-*   **Multi-Location Waypoint System**: Save unlimited named locations and manage them from the teleport menu
-*   **Spawn Teleport**: Always-available shortcut to your world spawn point—no save required
-*   **Named Locations**: Every saved waypoint has a custom name and displays its exact coordinates
-*   **Delete from UI**: Remove waypoints directly from the teleport menu
-*   **HUD Indicator**: A subtle UI element appears while holding the portal
-*   **Visual Polish**: Custom 3D model, animations, and blue particle effects during activation
+## Goblin Portal
 
-### 🔮 **Crafting Recipe**
+The Goblin Portal takes you to the Goblin Lab and gives you a way back to where you entered.
 
-Befitting its legendary status, the Pocket Portal requires rare essences:
+- Hold **Primary Interaction** for 2.5 seconds to enter the Goblin Lab.
+- Hold **Secondary Interaction** for 2.5 seconds while in the Goblin Lab to return to your entry point.
 
-*   15x Life Essence
-*   15x Fire Essence
-*   15x Void Essence
+The portal shows its own HUD indicator while held. It has a maximum stack size of one and is kept on death.
 
-Crafted at a Survival Workbench in just 3.5 seconds—once you have the ingredients, of course.
+### Goblin Portal recipe
 
-### 💡 **Perfect For**
+Craft at a Goblin Lab workbench:
 
-*   **Explorers** who venture far but need quick access to home storage
-*   **Miners** who want to deposit resources without losing their mining spot
-*   **Adventurers** tackling dangerous dungeons with a reliable escape route
-*   **Builders** working on distant projects who need to return to spawn for supplies
+- 30 Scraps
+- 15 Void Essence
+- 5 Void Crystals
 
-**Note**: The Pocket Portal is unique—you can only carry one at a time, and it is kept on death. Choose your waypoints wisely!
+Craft time: 3.5 seconds.
+
+## Using either portal
+
+Do not crouch while charging. Movement slows during the 2.5-second charge, and taking damage cancels the interaction. Each portal has a custom model, animation, and charging effect.
