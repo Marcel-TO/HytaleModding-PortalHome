@@ -37,4 +37,4 @@ build/
 devserver/
 .env
 run/
-blockbench_generator/
+generate_blockbench/
