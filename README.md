@@ -4,6 +4,8 @@ PortalHome adds two craftable portals to Hytale: the Pocket Portal for saving an
 
 ## Pocket Portal
 
+![Pocket Portal](docs/img/PocketPortal.png)
+
 Use the Pocket Portal to build a personal list of destinations.
 
 - Hold **Primary Interaction** for 2.5 seconds to open the teleport menu. Choose your world spawn or a saved location, or delete a saved location.
@@ -23,6 +25,8 @@ Craft at a Goblin Lab workbench:
 Craft time: 3.5 seconds.
 
 ## Goblin Portal
+
+![Goblin Portal](docs/img/GoblinPortal.png)
 
 The Goblin Portal takes you to the Goblin Lab and gives you a way back to where you entered.
 
